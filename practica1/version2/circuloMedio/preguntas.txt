@@ -1,0 +1,16 @@
+Practica 1 - guion 1 -
+3.
+
+Indique de nuevo que debemos hacer si modificamos el fichero punto2d.h,
+¿que ordenes serıa necesario volver a ejecutar para obtener de nuevo el ejecutable? ¿Y si modificamos circulo.cpp?
+
+si modificamos el fichero punto2d.h tendriamos que volver a ejecutar: 
+g++ -c src/punto2d.cpp -o obj/punto2d.o -Iinclude
+g++ -c src/central.cpp -o obj/central.o -Iinclude
+
+despues tambien el comando: ar rvs lib/libformas.a obj/punto2d.o obj/circulo.o
+y por ultimo el comando: g++ obj/central.o -lformas -o bin/central -Llib
+
+Y si modificaramos circulo.cpp
+tendrias que volver a compilar g++ -c src/central.cpp -o obj/central.o -Iinclude y despues tambien el comando: ar rvs lib/libformas.a obj/punto2d.o obj/circulo.o
+y por ultimo el comando: g++ obj/central.o -lformas -o bin/central -Llib
