@@ -51,7 +51,7 @@ int main()
         cout << "r1 NO es mayor que r2" << endl;
 
     // Punto dentro
-    if (r1.estaDentro(r1, p))
+    if (r1.estaDentro(p))
         cout << "El punto esta dentro de r1" << endl;
     else
         cout << "El punto NO esta dentro de r1" << endl;
