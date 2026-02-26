@@ -1,16 +1,17 @@
 #include <iostream>
-#include <cmath> 
+#include <cmath>
 #include <string>
 #include "punto2d.h"
 #include "rectangulo.h"
 
 using namespace std;
 
-int main() {
+int main()
+{
     double x1, y1, x2, y2;
     double x3, y3, x4, y4;
     double xp, yp;
-        
+
     cout << "introduzca datos para el primer rectangulo:\n";
     cin >> x1 >> y1 >> x2 >> y2;
 
@@ -30,21 +31,21 @@ int main() {
     // Crear rectángulos
     Rectangulo r1(p1, p2);
     Rectangulo r2(p3, p4);
-    
+
     // Mostrar rectángulos
     cout << "Rectangulo 1: " << r1.toString() << endl;
     cout << "Rectangulo 2: " << r2.toString() << endl;
 
     // Área
-    cout << "Area r1: " << r1.area(r1) << endl;
-    cout << "Area r2: " << r2.area(r2) << endl;
+    cout << "Area r1: " << r1.area() << endl;
+    cout << "Area r2: " << r2.area() << endl;
 
     // Perímetro
-    cout << "Perimetro r1: " << r1.perimetro(r1) << endl;
-    cout << "Perimetro r2: " << r2.perimetro(r2) << endl;
-    
+    cout << "Perimetro r1: " << r1.perimetro() << endl;
+    cout << "Perimetro r2: " << r2.perimetro() << endl;
+
     // Comparación
-    if (r1.esMayor(r1, r2))
+    if (r1.esMayor(r2))
         cout << "r1 es mayor que r2" << endl;
     else
         cout << "r1 NO es mayor que r2" << endl;
