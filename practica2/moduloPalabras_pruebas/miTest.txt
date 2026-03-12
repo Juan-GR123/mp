@@ -1,0 +1,17 @@
+# Compilador
+CXX = g++
+CXXFLAGS = -Iinclude
+
+all: bin/test
+
+bin/test: obj/test.o obj/palabras.o
+	$(CXX) obj/test.o obj/palabras.o -o bin/test
+
+obj/test.o: src/test.cpp include/palabras.h
+	$(CXX) -c src/test.cpp -o obj/test.o $(CXXFLAGS)
+
+obj/palabras.o: src/palabras.cpp include/palabras.h
+	$(CXX) -c src/palabras.cpp -o obj/palabras.o $(CXXFLAGS)
+
+clean:
+	rm -f obj/*.o bin/test

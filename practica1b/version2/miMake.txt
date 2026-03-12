@@ -1,0 +1,21 @@
+
+# Compilador
+CXX = g++
+CXXFLAGS = -Iinclude
+
+all: bin/bichos
+
+bin/bichos: obj/bichos.o obj/punto2d.o obj/rectangulo.o
+	$(CXX) obj/bichos.o obj/punto2d.o obj/rectangulo.o -o bin/bichos
+
+obj/bichos.o: src/bichos.cpp include/punto2d.h include/rectangulo.h
+	$(CXX) -c src/bichos.cpp -o obj/bichos.o $(CXXFLAGS)
+
+obj/punto2d.o: src/punto2d.cpp include/punto2d.h
+	$(CXX) -c src/punto2d.cpp -o obj/punto2d.o $(CXXFLAGS)
+
+obj/rectangulo.o: src/rectangulo.cpp include/rectangulo.h include/punto2d.h
+	$(CXX) -c src/rectangulo.cpp -o obj/rectangulo.o $(CXXFLAGS)
+
+clean:
+	rm -f obj/*.o bin/bichos
