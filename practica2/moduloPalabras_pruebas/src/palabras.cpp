@@ -8,7 +8,7 @@
 
 /*
 NOMBRE Y APELLIDOS: Juan García Rosales
-DNI:
+DNI
 GRUPO DE PRÁCTICAS: Miércoles
 */
 
