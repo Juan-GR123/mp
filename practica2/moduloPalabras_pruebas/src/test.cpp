@@ -5,12 +5,6 @@
  * Created on 10 de marzo de 2023
  */
 
-/*
-NOMBRE Y APELLIDOS: Juan García Rosales
-DNI:
-GRUPO DE PRÁCTICAS: Miércoles
-*/
-
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 

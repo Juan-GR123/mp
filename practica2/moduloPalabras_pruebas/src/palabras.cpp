@@ -7,12 +7,6 @@
  */
 
 /*
-NOMBRE Y APELLIDOS: Juan García Rosales
-DNI
-GRUPO DE PRÁCTICAS: Miércoles
-*/
-
-/*
 Se pide implementar un modulo ´ palabras con funciones que permitan:
 */
 

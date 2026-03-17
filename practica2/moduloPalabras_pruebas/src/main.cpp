@@ -5,12 +5,6 @@
  * Created on 10 de marzo de 2023
  */
 
-/*
-NOMBRE Y APELLIDOS: Juan García Rosales
-DNI:
-GRUPO DE PRÁCTICAS: Miércoles
-*/
-
 #include <iostream>
 #include "palabras.h"
 #include <cstring>
