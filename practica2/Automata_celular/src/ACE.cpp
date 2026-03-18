@@ -26,7 +26,3 @@ void mostrar(const bool state[], int tam)
         cout << endl;
     }
 }
-
-void siguienteEstado(bool actual[], bool nuevo[], bool reglas[], int tam)
-{
-}
