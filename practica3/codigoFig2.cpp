@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-
+#include <cstring>
 using namespace std;
 
 void mostrar(const int *v, int k)
@@ -70,6 +70,156 @@ void algoritmo(int *v, int n, int **principio, int **final)
       **principio = **final;
       **final = aux;
     }
+  }
+}
+// Saber cuantos caracteres tiene el texto T
+int longitud(const char s[])
+{
+  int cont = 0;
+
+  while (s[cont] != '\0')
+    cont++;
+
+  return cont;
+}
+
+// funcion privada.
+// el valor j siempre debe estar en el rango correcto
+bool empiezaPalabra(const char s[], int j)
+{
+  // empieza una palabra si el carácter en la posición j es distinto de espacio
+  // y, además, si j > 0, en la posición anterior había un espacio
+
+  bool es_letra_actual;
+  bool hay_sep_previo = true;
+
+  es_letra_actual = s[j] != ' ';
+  if (j > 0)
+    hay_sep_previo = (s[j - 1] == ' ');
+
+  return (es_letra_actual && hay_sep_previo);
+}
+
+// funcion privada.
+// el valor j siempre debe estar en el rango correcto
+bool terminaPalabra(const char s[], int j)
+{
+  // termina una palabra si el carácter en la posición j es distinto de espacio
+  // y, además, en la posición j+1 aparece un espacio o el terminador (es la última palabra)
+
+  bool es_letra_actual = (s[j] != ' ');
+  bool hay_sep_sig = (s[j + 1] == ' ') || (s[j + 1] == '\0');
+
+  return (es_letra_actual && hay_sep_sig);
+}
+
+void devolverPalabras(char s[], char *ptrIni[])
+{
+  int long1 = longitud(s);
+  int contador = 0;
+
+  for (int i = 0; i < long1; i++)
+  {
+    if (empiezaPalabra(s, i))
+    {
+      ptrIni[contador] = &s[i];
+      contador++;
+    }
+    else if (terminaPalabra(s, i))
+    {
+      ptrIni[contador] = &s[i];
+      contador++;
+    }
+  }
+}
+
+// Saber cuantas palabras tiene el texto T.
+int cuentaPalabras(const char msg[])
+{
+  int cont = 0;
+  int i = 0;
+  while (msg[i] != '\0')
+  {
+    if (empiezaPalabra(msg, i))
+    {
+      cont++;
+    }
+    i++;
+  }
+
+  return cont;
+}
+
+// Obtener la posicion de inicio de la palabra k- ´ esima. ´
+int posPalabra(const char msg[], int nroPal)
+{
+  int i = 0;
+  int palabras = cuentaPalabras(msg);
+  int cont_sep = 0;
+
+  if (nroPal <= palabras)
+  {
+    while (msg[i] != '\0')
+    {
+
+      if (empiezaPalabra(msg, i))
+      {
+        cont_sep++;
+      }
+
+      if (cont_sep == nroPal)
+      {
+        return i; // Esta será la posicion de la palabra que no han indicado
+      }
+      i++;
+    }
+  }
+
+  return -1;
+}
+
+// Calcular la longitud de la palabra k-esima de T.
+int longPalabra(const char s[], int nroPal)
+{
+
+  int posicion = posPalabra(s, nroPal);
+  int cont = 0;
+
+  if (posicion == -1)
+  {
+    return -1;
+  }
+  else
+  {
+    while (s[posicion] != ' ' && s[posicion] != '\0')
+    {
+      cont++;
+      posicion++;
+    }
+
+    return cont;
+  }
+}
+
+// Extraer la palabra k-esima de ´ T.
+void extraePalabra(const char msg[], int nroPal, char salida[])
+{
+  int posicion = posPalabra(msg, nroPal);
+  int longitud_pal = longPalabra(msg, nroPal);
+
+  if (posicion == -1)
+  {
+    salida[0] = '\0';
+  }
+  else
+  {
+    for (int i = 0; i < longitud_pal; i++)
+    {
+      salida[i] = msg[posicion];
+      posicion++;
+    }
+
+    salida[longitud_pal] = '\0';
   }
 }
 
@@ -167,4 +317,24 @@ int main()
   algoritmo(E2, N3, &principio, &final);
 
   mostrar(E2, N3);
+
+  // ejercicio 5
+
+  char cstring[100];
+  strcpy(cstring, "UNA CASA PERDIDA EN ALPUJARRAS");
+  char *ptrIni[100];
+  char nueva[100];
+
+  devolverPalabras(cstring, ptrIni);
+
+  cout << "La cadena: " << *ptrIni << " contiene la siguientes palabras " << endl;
+  int nro = 1;
+  int totalPalabras = cuentaPalabras(cstring);
+
+  while (nro <= totalPalabras)
+  {
+    extraePalabra(*ptrIni, nro, nueva); // extrae la palabra nro-ésima en el buffer
+    cout << nro << " -> " << nueva << " (" << longitud(nueva) << ")\n";
+    nro++;
+  }
 }
