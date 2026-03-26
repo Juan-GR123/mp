@@ -1,0 +1,17 @@
+# Compilador
+CXX = g++
+CXXFLAGS = -Iinclude
+
+all: bin/main
+
+bin/main: obj/main.o obj/memoria.o
+	$(CXX) obj/main.o obj/memoria.o -o bin/main
+
+obj/main.o: src/main.cpp include/memoria.h
+	$(CXX) -c src/main.cpp -o obj/main.o $(CXXFLAGS)
+
+obj/memoria.o: src/memoria.cpp include/memoria.h
+	$(CXX) -c src/memoria.cpp -o obj/memoria.o $(CXXFLAGS)
+
+clean:
+	rm -f obj/*.o bin/main

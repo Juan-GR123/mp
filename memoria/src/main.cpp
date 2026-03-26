@@ -5,9 +5,6 @@
 using namespace std;
 
 
-const int TAM = 3;        // capacidad inicial
-const int TAM_BLOQUE = 5; // para tipo 2
-
 int main(){
     string* p= new string[TAM];
     int util = 0;                // elementos usados
@@ -18,7 +15,7 @@ int main(){
 
     cin >> palabra;
 
-    if(palabra != "FIN"){
+    while(palabra != "FIN"){
 
         if(util == cap){
             int tipo;
