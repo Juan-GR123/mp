@@ -34,7 +34,7 @@ Conjunto union1(Conjunto &c1, Conjunto &c2){
     }
     
     Conjunto aux;
-    int nuevo_util = c1.util + contador;
+    int nuevo_util = contador;
     aux.datos = new string[nuevo_util];
     aux.util = 0;
 
@@ -48,6 +48,7 @@ Conjunto union1(Conjunto &c1, Conjunto &c2){
     {
         if(!pertenece(c1,c2.datos[i])){
             aux.datos[aux.util] = c2.datos[i]; 
+            aux.util++;
         }
     }
 
@@ -56,6 +57,29 @@ Conjunto union1(Conjunto &c1, Conjunto &c2){
 }
 
 Conjunto interseccion(Conjunto &c1, Conjunto &c2){
+    
+    int contador = 0;
+
+    // Contar elementos comunes
+    for (int i = 0; i < c1.util; i++){
+        if(pertenece(c2, c1.datos[i])){
+            contador++;
+        }
+    }
+
+    Conjunto aux;
+    aux.datos = new string[contador];
+    aux.util = 0;
+
+    // Guardar elementos comunes
+    for (int i = 0; i < c1.util; i++){
+        if(pertenece(c2, c1.datos[i]) && !pertenece(aux, c1.datos[i])){
+            aux.datos[aux.util] = c1.datos[i];
+            aux.util++;
+        }
+    }
+
+    return aux;
 
 }
 
@@ -66,8 +90,8 @@ Conjunto c2;
 
 
 c1.util = 3;
-c1.datos = new string[3] {"Alfonse","Greed","Sin"};
-
+c1.datos = new string[3] {"Edward","Greed","Sin"};
+ 
 c2.util = 3;
 c2.datos = new string[3] {"Harry","Edward","Elrick"};
 
