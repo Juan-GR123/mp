@@ -14,6 +14,9 @@ del modulo).
 */
 
 void crearDiccionario(Diccionario &dic){
+
+    borrarDiccionario(dic);
+
     dic.cap = n_datos; // Para el array datos se reservaran´ n datos = N INDICE×2 componentes
     dic.util = N_INDICE;
     dic.datos = new string[dic.cap]; //reserva espacio para los strings del diccionario.
@@ -26,7 +29,22 @@ void crearDiccionario(Diccionario &dic){
     }
 
     // posición extra al final del array indice
+    dic.datos[dic.util] = "000";
     dic.indice['Z'-'A' + 1] = &dic.datos[dic.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
+}
+
+/*borrarDiccionario: recibe un dato de tipo Diccionario y libera toda la memoria reservada.*/
+void borrarDiccionario(Diccionario &dic){
+
+    if(dic.datos != nullptr){
+        delete[] dic.datos;
+        delete[] dic.indice;
+        dic.datos = nullptr;
+        dic.indice = nullptr;
+        dic.util = 0;
+        dic.cap = 0;
+    }
+
 }
 
 /*
@@ -35,96 +53,35 @@ muestra todas las palabras del diccionario que comienzan con inicial. ***
 */
 
 void mostrarPalabras(Diccionario &dic, char letra){
+    string* posI = dic.indice[letra - 'A'];//posicion de la letra
+    string* posF = dic.indice[letra - 'A' + 1]; //posicion de la siguiente letra
 
-    Diccionario aux;
-
-    int inicio = dic.indice[letra - 'A'] - dic.datos; 
-    int final   = dic.indice[letra - 'A' + 1] - dic.datos;
-    int n_letras = final - inicio; 
-
-    //dic.indice[letra - 'A'] apunta a algún elemento de datos
-    //dic.datos apunta al primer elemento de datos
-    //  int n_letras = final - inicio; te da el numero de elementos de diferencia entre una letra y otra
-
-    aux.cap = n_letras;
-    aux.util = n_letras;
-    aux.datos = new string[aux.cap];
-    aux.indice = new string*[aux.util];
-
-    for (int i = 0; i < n_letras; i++) {
-
-        aux.datos[i] = dic.datos[inicio + i];
-        aux.indice[i] = &aux.datos[i];
-
+    while( posI <= posF){
+        cout << *posI; //muestra la siguiente palabra
+        posI++;
     }
-
-    cout << "Las palabras que empiezan por " << letra << " son: " << endl;
-
-    for (int i = 0; i < aux.util; i++)
-    {
-       cout << *aux.indice[i] << " " << endl;
-    }
-    
-
-    delete[] aux.datos;
-    delete[] aux.indice;
-
-    aux.util = 0;
-    aux.cap = 0;
-
-
 }
 
 /*
-mostrarDiccionario: utilizando la funcion anterior, muestra todas las palabras del diccionario
+mostrarDiccionario: utilizando la funcion anterior, muestra todas las palabras del diccionario***
 */
 
 void mostrarDiccionario(Diccionario &dic){ //como utilizo la funcion anterior aqui?
-    Diccionario mostrar;
-
-    mostrar.cap = dic.cap;
-    mostrar.util = dic.util;
-    mostrar.datos = new string[mostrar.cap];
-    mostrar.indice = new string*[mostrar.util];
-
-    cout << "Las palabras del array son: " << endl;
-
-    for (int i = 0; i < mostrar.util; i++)
-    {
-        mostrar.datos[i] = dic.datos[i];
-        mostrar.indice[i] = &mostrar.datos[i];
-        cout << *mostrar.indice[i] << ", ";
-    }
-
-    cout << endl;
-
-    delete[] mostrar.datos;
-    delete[] mostrar.indice;
-
-    mostrar.util = 0;
-    mostrar.cap = 0;
-
+    mostrarPalabras(dic, 'Z');
 }
 
 /*
 cuentaPalabras: recibe un dato de tipo Diccionario y devuelve la cantidad de palabras que empiezan con una letra dada. ***
 */
 
-int cuentaPalabras(Diccionario &dic, char letra){ //Entonces pongo esta funcion en mostrarPalabras?
-    int inicio = dic.indice[letra - 'A'] - dic.datos; 
-    int final   = dic.indice[letra - 'A' + 1] - dic.datos;
-    int n_letras = final - inicio; 
+int cuentaPalabras(Diccionario &dic, char letra){
 
-    return n_letras;
-
-
-    //dic.indice[letra - 'A'] apunta a algún elemento de datos
-    //dic.datos apunta al primer elemento de datos
-    //  int n_letras = final - inicio; te da el numero de elementos de diferencia entre una letra y otra
 }
 
 /*
 existe: recibe un dato de tipo Diccionario y un string pal comprueba si la palabra pal existe en el diccionario. Devuelve true o
 false. ***
 */
+bool existe(Diccionario &dic , string pal){
 
+}
