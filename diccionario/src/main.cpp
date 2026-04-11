@@ -99,7 +99,7 @@ void basico3(){
 
   mostrarPalabras(miDic, 'Z');
 
-  cout << "\nExiste ZANGANO " << existe(miDic, "ZANGANO");
+  cout << "\nExiste ZANGANO " << existe(miDic, "ZANGANO") << endl;
 
   mostrarDiccionario(miDic);
   
@@ -185,7 +185,7 @@ int main(){
     basico1();
     basico2();
     basico3();
-    redimensionar();
+    //redimensionar();
     //copiar();
 
 }

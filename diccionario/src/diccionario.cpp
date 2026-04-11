@@ -133,10 +133,63 @@ void agregaPalabra(Diccionario &dic, string pal){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
     }else{
 
+        if (dic.util == dic.cap) {
+            // Redimensionar si no hay espacio
+            int nuevoTam = dic.cap + 5; // Aumentamos el tamaño por 5
+            string* nuevoDatos = new string[nuevoTam]; // Crear un nuevo array
 
+            // Copiar los datos antiguos al nuevo array
+            for (int i = 0; i < dic.util; i++) {
+                nuevoDatos[i] = dic.datos[i];
+            }
+
+            // Liberar el antiguo array de datos y actualizar la capacidad
+            delete[] dic.datos;
+            dic.datos = nuevoDatos;
+            dic.cap = nuevoTam;
+        }
+
+        //Posteriormente la palabra debe insertarse en datos. Puede agregarla al final de las palabras que
+        //comienzan con la letra pal[0] (el primer caracter de ´ pal), o de forma ordenada.
+        // buscar posición (ordenado + por letra inicial)
+        char inicial = pal[0];
+        int pos = 0;
+
+
+        while (pos < dic.util && dic.datos[pos][0] < inicial) {// dic.datos[pos][0] primer caracter de la posicion pos
+            pos++;
+        }
+
+        while (pos < dic.util && dic.datos[pos][0] == inicial && dic.datos[pos] < pal) {
+            pos++;
+        }
+
+        // desplazar a la derecha
+        for (int j = dic.util; j > pos; j--) {
+            dic.datos[j] = dic.datos[j - 1];
+        }
+
+        // insertar
+        dic.datos[pos] = pal;
+        dic.util++;
+
+       
+        // reconstruir índice completo
+        int k = 0;
+
+        for (int i = 0; i < N_INDICE; i++) {
+            // avanzar hasta encontrar la primera palabra de esa letra
+            while (k < dic.util && dic.datos[k][0] < ('A' + i)) {
+                k++;
+            }
+            dic.indice[i] = &dic.datos[k];
+        }
+
+        // última posición (fin total)
+        dic.indice[N_INDICE] = &dic.datos[dic.util];
+
+                
     }
-        
-
     
 }
 
@@ -156,7 +209,7 @@ void borraPalabra(Diccionario &dic, string pal){
     if(!existe(dic, pal)){
         cout << "La palabra que intentas eliminar del diccionario no existe" << endl;
     }else{
-      
+        
     }
 }
 
@@ -196,7 +249,7 @@ void copiarDiccionario(Diccionario &dic1, Diccionario &dic2){
     borrarDiccionario(dic2);
 
     dic2.cap=dic1.cap;
-    dic2.util = dic2.util;
+    dic2.util = dic1.util;
 
     dic2.datos = new string[dic2.cap];
     dic2.indice = new string*[dic1.util];
