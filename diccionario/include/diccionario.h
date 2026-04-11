@@ -9,7 +9,7 @@ using namespace std;
 struct Diccionario{
     string *datos; //reserva espacio para los strings del diccionario.
     string** indice; //reserva espacio para los punteros que apuntarán a esos strings.
-    int cap;      // capacidad del array datos
+    int cap;      // cuántas posiciones hay reservadas en memoria
     int util;     // nro elementos almacenados en datos
 };
 
@@ -34,5 +34,7 @@ void agregaPalabra(Diccionario &dic, string pal);
 void borraPalabra(Diccionario &dic, string pal);
 
 void copiarDiccionario(Diccionario &dic1, Diccionario &dic2);
+
+void extraePalabras(Diccionario &dic, char letra, string* &resultado, int &tam);
 
 #endif
