@@ -127,67 +127,17 @@ Recuerde que si redimensiona, todos los valores de indice deben ser actualizados
 */
 
 void agregaPalabra(Diccionario &dic, string pal){
-    
-    if(existe(dic, pal)){
+
+    // 1. comprobar si existe
+    if (existe(dic, pal)){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
-    }else {
-        char inicial = pal[0];
-        int idx = inicial - 'A';
+    }else{
 
 
-        if (dic.util == dic.cap) {
-        // Redimensionar si no hay espacio
-        int nuevoTam = dic.cap + 5; // Aumentamos el tamaño por 5
-        string* nuevoDatos = new string[nuevoTam]; // Crear un nuevo array
-
-        // Copiar los datos antiguos al nuevo array
-        for (int i = 0; i < dic.util; i++) {
-            nuevoDatos[i] = dic.datos[i];
-        }
-
-        // Liberar el antiguo array de datos y actualizar la capacidad
-        delete[] dic.datos;
-        dic.datos = nuevoDatos;
-        dic.cap = nuevoTam;
     }
+        
 
-    //Insertar la palabra en la posición correcta en `datos`
-
-        string* posI = dic.indice[idx];
-        string* posF = dic.indice[idx + 1];
-
-        // Encontrar la posición de inserción ordenada
-        string* posInsertar = posI;
-        while (posInsertar < posF && *posInsertar < pal) {
-            posInsertar++;
-        }
-
-        // Mover todas las palabras para hacer espacio
-        for (string* pos = dic.datos + dic.util; pos > posInsertar; pos--) {
-            //dic.datos + dic.util es la última posición ocupada en el array datos.
-            *pos = *(pos - 1); // mueve los string de la posicion de antes hacia la siguiente
-        }
-
-        // Insertar la nueva palabra en la posición correcta
-        *posInsertar = pal;
-        dic.util++; // Aumentamos el contador de palabras
     
-        // AJUSTE DEL ÍNDICE (CORRECTO)
-
-        // Si el inicio del bloque era después, lo corregimos
-        if (dic.indice[idx] > posInsertar) {
-            dic.indice[idx] = posInsertar;
-        }
-
-        // Paso 3: Actualizar el índice
-        // Actualizamos los punteros del índice de acuerdo a la nueva palabra insertada
-        for (int i = idx + 1; i < 27; i++) {
-            if (dic.indice[i] >= posInsertar) {
-                dic.indice[i]++;
-            }
-        }
-    
-    }
 }
 
 /*
@@ -206,61 +156,7 @@ void borraPalabra(Diccionario &dic, string pal){
     if(!existe(dic, pal)){
         cout << "La palabra que intentas eliminar del diccionario no existe" << endl;
     }else{
-        char inicial = pal[0];
-        string* posI = dic.indice[inicial - 'A']; 
-        string* posF = dic.indice[inicial - 'A' + 1];
-
-
-        // Buscar la palabra en el rango de posiciones
-        string* posEliminar = nullptr;
-        while (posI < posF) {
-            if (*posI == pal) {
-                posEliminar = posI;
-            }
-            posI++;
-        }
-
-        if (posEliminar != nullptr) {
-            // Desplazamos las palabras a una posicion mas atras para eliminar la palabra
-            for (string* pos = posEliminar; pos < dic.datos + dic.util - 1; pos++) {
-                *pos = *(pos + 1);
-            }
-
-            // Reducimos el contador de palabras
-            dic.util--;
-
-            // Actualizamos el índice
-            //Recorres todas las letras desde la inicial hasta el final 
-            for (int i = inicial - 'A'; i < 27; i++) {
-                if (dic.indice[i] > posEliminar) { //comprobamos si los punteros apuntan a una posicion que se ha desplazado
-                    dic.indice[i]--; //y en caso de ser cierto los movemos una posicion antes para que apunten a donde apuntaban anteriormente
-                }
-            }
-           
-
-            // Reducir el tamaño del array si el espacio libre es mayor que 2 * TAM
-            const int TAM = 5;
-
-            if (dic.cap - dic.util > 2 * TAM) {//si los espacios reservados son mayores que TAM*2
-
-                int nuevoTam = dic.cap - 2 * TAM;
-                string* nuevoDatos = new string[nuevoTam];
-
-                // copiar datos
-                for (int i = 0; i < dic.util; i++) {
-                    nuevoDatos[i] = dic.datos[i];
-                }
-
-                delete[] dic.datos;
-                dic.datos = nuevoDatos;
-                dic.cap = nuevoTam;
-
-                // reconstruir índice (forma segura)
-                for (int i = 0; i < 27; i++) {
-                    dic.indice[i] = &dic.datos[i];
-                }
-            }
-        }
+      
     }
 }
 
