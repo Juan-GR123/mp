@@ -56,18 +56,20 @@ void mostrarPalabras(Diccionario &dic, char letra){
     string* posI = dic.indice[letra - 'A'];//posicion de la letra
     string* posF = dic.indice[letra - 'A' + 1]; //posicion de la siguiente letra
 
-    while( posI <= posF){
-        cout << *posI; //muestra la siguiente palabra
-        posI++;
+   for(string* p = posI; p < posF; p++){
+        cout << *p << " ";
     }
+    cout << endl;
 }
 
 /*
 mostrarDiccionario: utilizando la funcion anterior, muestra todas las palabras del diccionario***
 */
 
-void mostrarDiccionario(Diccionario &dic){ //como utilizo la funcion anterior aqui?
-    mostrarPalabras(dic, 'Z');
+void mostrarDiccionario(Diccionario &dic){
+    for(char c = 'A'; c <= 'Z'; c++){
+        mostrarPalabras(dic, c);
+    }
 }
 
 /*
@@ -80,7 +82,7 @@ int cuentaPalabras(Diccionario &dic, char letra){
     string* posF = dic.indice[letra - 'A' + 1]; //posicion de la siguiente letra
     int contador = 0;
 
-    while( posI <= posF){
+    while( posI < posF){
         contador++;
         posI++;
     }
@@ -129,6 +131,10 @@ void agregaPalabra(Diccionario &dic, string pal){
     if(existe(dic, pal)){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
     }else {
+        char inicial = pal[0];
+        int idx = inicial - 'A';
+
+
         if (dic.util == dic.cap) {
         // Redimensionar si no hay espacio
         int nuevoTam = dic.cap + 5; // Aumentamos el tamaño por 5
@@ -147,9 +153,8 @@ void agregaPalabra(Diccionario &dic, string pal){
 
     //Insertar la palabra en la posición correcta en `datos`
 
-        char inicial = pal[0];
-        string* posI = dic.indice[inicial - 'A']; 
-        string* posF = dic.indice[inicial - 'A' + 1];
+        string* posI = dic.indice[idx];
+        string* posF = dic.indice[idx + 1];
 
         // Encontrar la posición de inserción ordenada
         string* posInsertar = posI;
@@ -167,11 +172,17 @@ void agregaPalabra(Diccionario &dic, string pal){
         *posInsertar = pal;
         dic.util++; // Aumentamos el contador de palabras
     
-    
+        // AJUSTE DEL ÍNDICE (CORRECTO)
+
+        // Si el inicio del bloque era después, lo corregimos
+        if (dic.indice[idx] > posInsertar) {
+            dic.indice[idx] = posInsertar;
+        }
+
         // Paso 3: Actualizar el índice
         // Actualizamos los punteros del índice de acuerdo a la nueva palabra insertada
-        for (int i = inicial - 'A'; i < 27; i++) {
-            if (dic.indice[i] > posInsertar) {
+        for (int i = idx + 1; i < 27; i++) {
+            if (dic.indice[i] >= posInsertar) {
                 dic.indice[i]++;
             }
         }

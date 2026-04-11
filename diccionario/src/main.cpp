@@ -28,6 +28,14 @@ void basico1(){
     cartel("crear/borrar llamadas consecutivas");
     Diccionario miDic = {nullptr, nullptr, 0,0};
     crearDiccionario(miDic);
+
+    /*
+    for (int i = 0; i < miDic.util; i++)
+    {
+        cout << miDic.datos[i] << endl;
+    }
+    */
+
     borrarDiccionario(miDic);
 
     crearDiccionario(miDic);
@@ -43,6 +51,12 @@ void basico2(){
     crearDiccionario(miDic);
     agregaPalabra(miDic, "ALGO");
     agregaPalabra(miDic, "ALGUN");
+
+    for (int i = 0; i < miDic.util; i++)
+    {
+        cout << miDic.datos[i] << endl;
+    }
+    
 
     mostrarPalabras(miDic, 'A');
     
@@ -169,9 +183,9 @@ void copiar(){
 int main(){ 
    // llamado a las funciones de prueba
     basico1();
-    //basico2();
-    //basico3();
-    //redimensionar();
+    basico2();
+    basico3();
+    redimensionar();
     //copiar();
 
 }
