@@ -185,8 +185,8 @@ int main(){
     basico1();
     basico2();
     basico3();
-    //redimensionar();
-    //copiar();
+    redimensionar();
+    copiar();
 
 }
                  

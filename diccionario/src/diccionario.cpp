@@ -20,7 +20,7 @@ void crearDiccionario(Diccionario &dic){
     dic.cap = n_datos; // Para el array datos se reservaran´ n datos = N INDICE×2 componentes
     dic.util = N_INDICE;
     dic.datos = new string[dic.cap]; //reserva espacio para los strings del diccionario.
-    dic.indice = new string*[dic.util]; //reserva espacio para los punteros que apuntarán a esos strings.
+    dic.indice = new string*[N_INDICE + 1]; //reserva espacio para los punteros que apuntarán a esos strings.
 
     for (int i = 0; i < dic.util; i++)
     {
@@ -155,11 +155,12 @@ void agregaPalabra(Diccionario &dic, string pal){
         char inicial = pal[0];
         int pos = 0;
 
-
+        //mientras que la letra sea menor que la que se ha introducido y la posicion menor que util
         while (pos < dic.util && dic.datos[pos][0] < inicial) {// dic.datos[pos][0] primer caracter de la posicion pos
             pos++;
         }
-
+        //mientras que la letra sea igual a la que se ha introducido pero la palabra sea menor que la que se ha
+        // introducido como en el caso de que queramos agregar cosa y haya una palabra casa en el array entonces: cosa < casa
         while (pos < dic.util && dic.datos[pos][0] == inicial && dic.datos[pos] < pal) {
             pos++;
         }
@@ -209,8 +210,50 @@ void borraPalabra(Diccionario &dic, string pal){
     if(!existe(dic, pal)){
         cout << "La palabra que intentas eliminar del diccionario no existe" << endl;
     }else{
-        
-    }
+        char inicial = pal[0];
+        int pos = 0;
+
+        while (pos < dic.util && dic.datos[pos] != pal) {
+            pos++;
+        }
+
+        //desplazar a la izquierda
+        for (int i = pos; i < dic.util - 1; i++) {
+            dic.datos[i] = dic.datos[i + 1];
+        }
+
+        dic.util--;
+
+        //redimensionar si sobra demasiado espacio (2*TAM = 10)
+        if (dic.cap - dic.util > 10) {
+
+            int nuevoTam = dic.cap - 10;
+            string* nuevoDatos = new string[nuevoTam];
+
+            for (int i = 0; i < dic.util; i++) {
+                nuevoDatos[i] = dic.datos[i];
+            }
+
+            delete[] dic.datos;
+            dic.datos = nuevoDatos;
+            dic.cap = nuevoTam;
+        }
+
+        // 4. reconstruir índice
+        int k = 0;
+
+        for (int i = 0; i < N_INDICE; i++) {
+
+            while (k < dic.util && dic.datos[k][0] < ('A' + i)) {
+                k++;
+            }
+
+            dic.indice[i] = &dic.datos[k];
+        }
+
+        dic.indice[N_INDICE] = &dic.datos[dic.util];
+
+        }
 }
 
 /*
@@ -252,17 +295,37 @@ void copiarDiccionario(Diccionario &dic1, Diccionario &dic2){
     dic2.util = dic1.util;
 
     dic2.datos = new string[dic2.cap];
-    dic2.indice = new string*[dic1.util];
+    dic2.indice = new string*[N_INDICE + 1];
 
 
     for (int i = 0; i < dic1.util; i++)
     {
         dic2.datos[i] = dic1.datos[i];
-        dic2.indice[i] = &dic2.datos[i];
     }
-    
-    dic2.datos[dic1.util] = "000";
-    dic2.indice[dic1.util] = &dic2.datos[dic1.util];
+
+    // reconstruir índice
+    int k = 0;
+
+    for (int i = 0; i < N_INDICE; i++) {
+
+        //Avanza k hasta encontrar la primera palabra que empieza por la letra i
+        while (k < dic2.util && dic2.datos[k][0] < ('A' + i)){
+            k++;
+        }
+            
+
+        //Si hay palabras de esa letra apunta a la primera
+        //si no hay, apunta al final
+        if (k < dic2.util) {
+            dic2.indice[i] = &dic2.datos[k];
+        } else {
+            dic2.indice[i] = &dic2.datos[dic2.util];
+        }
+    }
+
+    dic2.indice[N_INDICE] = &dic2.datos[dic2.util];
+
+
 
     
 }
