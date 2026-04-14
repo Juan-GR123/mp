@@ -52,10 +52,10 @@ void basico2(){
     agregaPalabra(miDic, "ALGO");
     agregaPalabra(miDic, "ALGUN");
 
-    for (int i = 0; i < miDic.util; i++)
+    /*for (int i = 0; i < miDic.util; i++)
     {
         cout << miDic.datos[i] << endl;
-    }
+    }*/
     
 
     mostrarPalabras(miDic, 'A');

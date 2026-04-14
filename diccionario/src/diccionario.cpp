@@ -20,7 +20,7 @@ void crearDiccionario(Diccionario &dic){
     dic.cap = n_datos; // Para el array datos se reservaran´ n datos = N INDICE×2 componentes
     dic.util = N_INDICE;
     dic.datos = new string[dic.cap]; //reserva espacio para los strings del diccionario.
-    dic.indice = new string*[N_INDICE + 1]; //reserva espacio para los punteros que apuntarán a esos strings.
+    dic.indice = new string*[dic.util + 1]; //reserva espacio para los punteros que apuntarán a esos strings.
 
     for (int i = 0; i < dic.util; i++)
     {
@@ -30,7 +30,7 @@ void crearDiccionario(Diccionario &dic){
 
     // posición extra al final del array indice
     dic.datos[dic.util] = "000";
-    dic.indice['Z'-'A' + 1] = &dic.datos[dic.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
+    dic.indice[dic.util] = &dic.datos[dic.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
 }
 
 /*borrarDiccionario: recibe un dato de tipo Diccionario y libera toda la memoria reservada.*/
@@ -128,30 +128,30 @@ Recuerde que si redimensiona, todos los valores de indice deben ser actualizados
 
 void agregaPalabra(Diccionario &dic, string pal){
 
-    // 1. comprobar si existe
+    //comprobar si existe
     if (existe(dic, pal)){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
     }else{
-
+        // Esto significa que si dic.util que son la cantidad de palabras del array y 
+        //dic.cap que son las posiciones del array tanto libres como ocupadas son iguales 
+        //entonces hara falta añadir mas espacio
         if (dic.util == dic.cap) {
-            // Redimensionar si no hay espacio
             int nuevoTam = dic.cap + 5; // Aumentamos el tamaño por 5
-            string* nuevoDatos = new string[nuevoTam]; // Crear un nuevo array
+            string* nuevoDatos = new string[nuevoTam]; // Creamos un nuevo array con el nuevo tamaño
 
-            // Copiar los datos antiguos al nuevo array
+            // Copiamos los datos antiguos al nuevo array
             for (int i = 0; i < dic.util; i++) {
                 nuevoDatos[i] = dic.datos[i];
             }
 
-            // Liberar el antiguo array de datos y actualizar la capacidad
+            // Liberaramos el antiguo array de datos y actualizar la capacidad
             delete[] dic.datos;
             dic.datos = nuevoDatos;
             dic.cap = nuevoTam;
         }
 
-        //Posteriormente la palabra debe insertarse en datos. Puede agregarla al final de las palabras que
-        //comienzan con la letra pal[0] (el primer caracter de ´ pal), o de forma ordenada.
-        // buscar posición (ordenado + por letra inicial)
+        //Posteriormente la palabra debe insertarse en datos. Podemos agregarla al final de las palabras que
+        //comienzan con la letra pal[0] (el primer caracter de pal), o de forma ordenada.
         char inicial = pal[0];
         int pos = 0;
 
@@ -166,29 +166,25 @@ void agregaPalabra(Diccionario &dic, string pal){
         }
 
         // desplazar a la derecha
+        //  Para mover los datos una posicion a la derecha nos situamos en el último elemento del array datos
+        // y a partir de hay vamos reduciendo hasta llegar a la posicion donde debemos insertar el nuevo elemento
         for (int j = dic.util; j > pos; j--) {
+            // ejemplo: dic.datos[10] = dic.datos[9],
+            // es decir el elemento que estaba en la posicion 9 pasa a estarlo en la 10
             dic.datos[j] = dic.datos[j - 1];
+            //lo mismo pero con las posiciones del indice
+            dic.indice[j] = dic.indice[j - 1];
         }
 
-        // insertar
+        // insertamos el elemento en la nueva posición vacia y añadimos uno a util para saber que ahora hay un elemento mas
         dic.datos[pos] = pal;
         dic.util++;
 
-       
-        // reconstruir índice completo
-        int k = 0;
-
-        for (int i = 0; i < N_INDICE; i++) {
-            // avanzar hasta encontrar la primera palabra de esa letra
-            while (k < dic.util && dic.datos[k][0] < ('A' + i)) {
-                k++;
-            }
-            dic.indice[i] = &dic.datos[k];
+        for (int i = 0; i < dic.util; i++)
+        {
+            cout << dic.datos[i] << endl;
         }
-
-        // última posición (fin total)
-        dic.indice[N_INDICE] = &dic.datos[dic.util];
-
+        
                 
     }
     
@@ -218,13 +214,17 @@ void borraPalabra(Diccionario &dic, string pal){
         }
 
         //desplazar a la izquierda
+        //como en agregar palabra pero esta vez empezamos desde la posicion que hemos borrado y vamos añadiendo los datos
         for (int i = pos; i < dic.util - 1; i++) {
+            //ejemplo: dic.datos[9] = dic.datos[10]
             dic.datos[i] = dic.datos[i + 1];
+            dic.indice[i] = dic.indice[i + 1];
         }
 
         dic.util--;
 
         //redimensionar si sobra demasiado espacio (2*TAM = 10)
+        // si la diferencia entre los espacios vacios y los espacios ocupados es mayor que 10 hace falta redimensionar
         if (dic.cap - dic.util > 10) {
 
             int nuevoTam = dic.cap - 10;
@@ -239,21 +239,7 @@ void borraPalabra(Diccionario &dic, string pal){
             dic.cap = nuevoTam;
         }
 
-        // 4. reconstruir índice
-        int k = 0;
-
-        for (int i = 0; i < N_INDICE; i++) {
-
-            while (k < dic.util && dic.datos[k][0] < ('A' + i)) {
-                k++;
-            }
-
-            dic.indice[i] = &dic.datos[k];
-        }
-
-        dic.indice[N_INDICE] = &dic.datos[dic.util];
-
-        }
+    }
 }
 
 /*
@@ -304,26 +290,15 @@ void copiarDiccionario(Diccionario &dic1, Diccionario &dic2){
     }
 
     // reconstruir índice
-    int k = 0;
-
-    for (int i = 0; i < N_INDICE; i++) {
-
-        //Avanza k hasta encontrar la primera palabra que empieza por la letra i
-        while (k < dic2.util && dic2.datos[k][0] < ('A' + i)){
-            k++;
-        }
-            
-
-        //Si hay palabras de esa letra apunta a la primera
-        //si no hay, apunta al final
-        if (k < dic2.util) {
-            dic2.indice[i] = &dic2.datos[k];
-        } else {
-            dic2.indice[i] = &dic2.datos[dic2.util];
-        }
+    for (int i = 0; i < dic2.util; i++)
+    {
+        dic2.indice[i] = &dic2.datos[i];
     }
+    
 
-    dic2.indice[N_INDICE] = &dic2.datos[dic2.util];
+    // posición extra al final del array indice
+    dic2.datos[dic2.util] = "000";
+    dic2.indice[dic2.util] = &dic2.datos[dic2.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
 
 
 
