@@ -17,7 +17,7 @@ void crearDiccionario(Diccionario &dic){
 
     borrarDiccionario(dic);
 
-    dic.cap = n_datos; // Para el array datos se reservaran´ n datos = N INDICE×2 componentes
+    dic.cap = N_DATOS; // Para el array datos se reservaran´ n datos = N INDICE×2 componentes
     dic.util = N_INDICE;
     dic.datos = new string[dic.cap]; //reserva espacio para los strings del diccionario.
     dic.indice = new string*[dic.util + 1]; //reserva espacio para los punteros que apuntarán a esos strings.
@@ -111,6 +111,46 @@ bool existe(Diccionario &dic , string pal){
     return existe_pal;
 }
 
+void redimensionar(Diccionario &dic, int tipo){
+
+    int mas= 5;
+    int menos = 10;
+    if(tipo==1){
+        // Esto significa que si dic.util que son la cantidad de palabras del array y 
+        //dic.cap que son las posiciones del array tanto libres como ocupadas son iguales 
+        //entonces hara falta añadir mas espacio
+        
+            int nuevoTam = dic.cap + mas; // Aumentamos el tamaño por 5
+            string* nuevoDatos = new string[nuevoTam]; // Creamos un nuevo array con el nuevo tamaño
+            // Copiamos los datos antiguos al nuevo array
+            for (int i = 0; i < dic.util; i++) {
+                nuevoDatos[i] = dic.datos[i];
+            }
+
+           // Liberaramos el antiguo array de datos y actualizar la capacidad
+           delete[] dic.datos;
+           dic.datos = nuevoDatos;
+           dic.cap = nuevoTam;
+    }else if(tipo==2){
+        //redimensionar si sobra demasiado espacio (2*TAM = 10)
+        // si la diferencia entre los espacios vacios y los espacios ocupados es mayor que 10 hace falta redimensionar
+        
+        if (dic.cap - dic.util > menos) {
+
+            int nuevoTam = dic.cap - menos;
+            string* nuevoDatos = new string[nuevoTam];
+
+            for (int i = 0; i < dic.util; i++) {
+                nuevoDatos[i] = dic.datos[i];
+            }
+
+            delete[] dic.datos;
+            dic.datos = nuevoDatos;
+            dic.cap = nuevoTam;
+        }
+    }
+}
+
 /*
 agregaPalabra: recibe un dato de tipo Diccionario y un string pal. 
 Si la palabra pal a agregar ya existe, no hace nada. 
@@ -132,58 +172,42 @@ void agregaPalabra(Diccionario &dic, string pal){
     if (existe(dic, pal)){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
     }else{
-        // Esto significa que si dic.util que son la cantidad de palabras del array y 
-        //dic.cap que son las posiciones del array tanto libres como ocupadas son iguales 
-        //entonces hara falta añadir mas espacio
+    
         if (dic.util == dic.cap) {
-            int nuevoTam = dic.cap + 5; // Aumentamos el tamaño por 5
-            string* nuevoDatos = new string[nuevoTam]; // Creamos un nuevo array con el nuevo tamaño
-
-            // Copiamos los datos antiguos al nuevo array
-            for (int i = 0; i < dic.util; i++) {
-                nuevoDatos[i] = dic.datos[i];
-            }
-
-            // Liberaramos el antiguo array de datos y actualizar la capacidad
-            delete[] dic.datos;
-            dic.datos = nuevoDatos;
-            dic.cap = nuevoTam;
+            redimensionar(dic, 1);
         }
-
+        
         //Posteriormente la palabra debe insertarse en datos. Podemos agregarla al final de las palabras que
         //comienzan con la letra pal[0] (el primer caracter de pal), o de forma ordenada.
-        char inicial = pal[0];
+        char inicial = pal[0]; 
         int pos = 0;
 
-        //mientras que la letra sea menor que la que se ha introducido y la posicion menor que util
-        while (pos < dic.util && dic.datos[pos][0] < inicial) {// dic.datos[pos][0] primer caracter de la posicion pos
-            pos++;
-        }
-        //mientras que la letra sea igual a la que se ha introducido pero la palabra sea menor que la que se ha
-        // introducido como en el caso de que queramos agregar cosa y haya una palabra casa en el array entonces: cosa < casa
-        while (pos < dic.util && dic.datos[pos][0] == inicial && dic.datos[pos] < pal) {
-            pos++;
-        }
+        string* posI = dic.indice[inicial - 'A'];
+        string* posF = dic.indice[inicial - 'A' + 1];
+        
+        pos = posF - dic.datos;
 
         // desplazar a la derecha
-        //  Para mover los datos una posicion a la derecha nos situamos en el último elemento del array datos
-        // y a partir de hay vamos reduciendo hasta llegar a la posicion donde debemos insertar el nuevo elemento
         for (int j = dic.util; j > pos; j--) {
             // ejemplo: dic.datos[10] = dic.datos[9],
             // es decir el elemento que estaba en la posicion 9 pasa a estarlo en la 10
             dic.datos[j] = dic.datos[j - 1];
-            //lo mismo pero con las posiciones del indice
-            dic.indice[j] = dic.indice[j - 1];
         }
+
+         
+
 
         // insertamos el elemento en la nueva posición vacia y añadimos uno a util para saber que ahora hay un elemento mas
         dic.datos[pos] = pal;
         dic.util++;
 
-        for (int i = 0; i < dic.util; i++)
+        
+        for (char i = inicial + 1; i <= 'Z'; i++)
         {
-            cout << dic.datos[i] << endl;
+            dic.indice[i - 'A']++;
         }
+
+        
         
                 
     }
@@ -222,22 +246,6 @@ void borraPalabra(Diccionario &dic, string pal){
         }
 
         dic.util--;
-
-        //redimensionar si sobra demasiado espacio (2*TAM = 10)
-        // si la diferencia entre los espacios vacios y los espacios ocupados es mayor que 10 hace falta redimensionar
-        if (dic.cap - dic.util > 10) {
-
-            int nuevoTam = dic.cap - 10;
-            string* nuevoDatos = new string[nuevoTam];
-
-            for (int i = 0; i < dic.util; i++) {
-                nuevoDatos[i] = dic.datos[i];
-            }
-
-            delete[] dic.datos;
-            dic.datos = nuevoDatos;
-            dic.cap = nuevoTam;
-        }
 
     }
 }
@@ -299,8 +307,4 @@ void copiarDiccionario(Diccionario &dic1, Diccionario &dic2){
     // posición extra al final del array indice
     dic2.datos[dic2.util] = "000";
     dic2.indice[dic2.util] = &dic2.datos[dic2.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
-
-
-
-    
 }

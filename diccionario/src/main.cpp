@@ -50,14 +50,12 @@ void basico2(){
     Diccionario miDic = {nullptr, nullptr, 0,0};
     crearDiccionario(miDic);
     agregaPalabra(miDic, "ALGO");
+  
     agregaPalabra(miDic, "ALGUN");
 
-    /*for (int i = 0; i < miDic.util; i++)
-    {
-        cout << miDic.datos[i] << endl;
-    }*/
-    
 
+    mostrarDiccionario(miDic);
+    
     mostrarPalabras(miDic, 'A');
     
 
@@ -70,6 +68,7 @@ void basico2(){
     cout << " Hay " << cuentaPalabras(miDic, 'A') << " con A " << endl;
     cout << " Hay " << cuentaPalabras(miDic, 'B') << " con B " << endl;
     cout << " Hay " << cuentaPalabras(miDic, 'Z') << " con Z " << endl;
+    
     borrarDiccionario(miDic);
 }
 
@@ -184,9 +183,9 @@ int main(){
    // llamado a las funciones de prueba
     basico1();
     basico2();
-    basico3();
-    redimensionar();
-    copiar();
+   // basico3();
+    //redimensionar();
+    //copiar();
 
 }
                  

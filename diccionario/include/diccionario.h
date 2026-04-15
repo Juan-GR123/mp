@@ -15,9 +15,11 @@ struct Diccionario{
 
 
 const int N_INDICE = 'Z' - 'A' + 1; // 26 letras + 1
-const int n_datos = N_INDICE * 2;
+const int N_DATOS = N_INDICE * 2;
 
 void crearDiccionario(Diccionario &dic);
+
+void redimensionar(Diccionario &dic, int tipo);
 
 void borrarDiccionario(Diccionario &dic);
 
