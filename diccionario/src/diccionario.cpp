@@ -86,7 +86,7 @@ int cuentaPalabras(Diccionario &dic, char letra){
         contador++;
         posI++;
     }
-
+ 
     return contador;
 }
 
@@ -111,6 +111,21 @@ bool existe(Diccionario &dic , string pal){
     return existe_pal;
 }
 
+void redimensionar_indices(Diccionario &dic){
+    int k = 0;
+    for (int i = 0; i <= N_INDICE; i++) {
+        dic.indice[i] = &dic.datos[k];
+
+        // avanzar hasta la siguiente letra
+        if (i < N_INDICE) {
+            char letra = 'A' + i;
+            while (k < dic.util && dic.datos[k][0] == letra) {
+                k++;
+            }
+        }
+    }
+}
+
 void redimensionar(Diccionario &dic, int tipo){
 
     int mas= 5;
@@ -119,7 +134,7 @@ void redimensionar(Diccionario &dic, int tipo){
         // Esto significa que si dic.util que son la cantidad de palabras del array y 
         //dic.cap que son las posiciones del array tanto libres como ocupadas son iguales 
         //entonces hara falta añadir mas espacio
-        
+         if (dic.util == dic.cap) {
             int nuevoTam = dic.cap + mas; // Aumentamos el tamaño por 5
             string* nuevoDatos = new string[nuevoTam]; // Creamos un nuevo array con el nuevo tamaño
             // Copiamos los datos antiguos al nuevo array
@@ -131,6 +146,11 @@ void redimensionar(Diccionario &dic, int tipo){
            delete[] dic.datos;
            dic.datos = nuevoDatos;
            dic.cap = nuevoTam;
+           
+           //Tambien debemos redimensionar los indices
+           redimensionar_indices(dic);
+          
+         }
     }else if(tipo==2){
         //redimensionar si sobra demasiado espacio (2*TAM = 10)
         // si la diferencia entre los espacios vacios y los espacios ocupados es mayor que 10 hace falta redimensionar
@@ -148,6 +168,8 @@ void redimensionar(Diccionario &dic, int tipo){
             dic.datos = nuevoDatos;
             dic.cap = nuevoTam;
         }
+        
+        redimensionar_indices(dic);
     }
 }
 
@@ -173,9 +195,9 @@ void agregaPalabra(Diccionario &dic, string pal){
         cout << "La palabra que quieres agregar al diccionario ya existe " << endl;
     }else{
     
-        if (dic.util == dic.cap) {
-            redimensionar(dic, 1);
-        }
+       
+        redimensionar(dic, 1);
+  
         
         //Posteriormente la palabra debe insertarse en datos. Podemos agregarla al final de las palabras que
         //comienzan con la letra pal[0] (el primer caracter de pal), o de forma ordenada.
@@ -185,7 +207,13 @@ void agregaPalabra(Diccionario &dic, string pal){
         string* posI = dic.indice[inicial - 'A'];
         string* posF = dic.indice[inicial - 'A' + 1];
         
-        pos = posF - dic.datos;
+        pos =  posF - dic.datos;
+
+        /*for (int i = 0; i < dic.util; i++)
+        {
+            cout << dic.datos[i] << endl;
+        }
+         */
 
         // desplazar a la derecha
         for (int j = dic.util; j > pos; j--) {
@@ -194,22 +222,16 @@ void agregaPalabra(Diccionario &dic, string pal){
             dic.datos[j] = dic.datos[j - 1];
         }
 
-         
-
-
         // insertamos el elemento en la nueva posición vacia y añadimos uno a util para saber que ahora hay un elemento mas
         dic.datos[pos] = pal;
         dic.util++;
 
         
-        for (char i = inicial + 1; i <= 'Z'; i++)
+        for (int i = (inicial - 'A') + 1; i <= N_INDICE; i++)
         {
-            dic.indice[i - 'A']++;
+            dic.indice[i]++;
         }
-
         
-        
-                
     }
     
 }
@@ -232,7 +254,7 @@ void borraPalabra(Diccionario &dic, string pal){
     }else{
         char inicial = pal[0];
         int pos = 0;
-
+        
         while (pos < dic.util && dic.datos[pos] != pal) {
             pos++;
         }
@@ -242,11 +264,16 @@ void borraPalabra(Diccionario &dic, string pal){
         for (int i = pos; i < dic.util - 1; i++) {
             //ejemplo: dic.datos[9] = dic.datos[10]
             dic.datos[i] = dic.datos[i + 1];
-            dic.indice[i] = dic.indice[i + 1];
         }
 
         dic.util--;
+        
+        for (int i = (inicial - 'A') + 1; i <= N_INDICE; i++)
+        {
+            dic.indice[i]--;
+        }
 
+        redimensionar(dic, 2);
     }
 }
 
@@ -256,14 +283,14 @@ conteniendo todas las palabras que empiezan con inicial, y su tamaño
 ***
 */
 
-void extraePalabras(Diccionario &dic, char letra, string* &resultado, int &tam){
+string* extraePalabras(Diccionario &dic, char letra, int &tam){
     tam = cuentaPalabras(dic, letra);
 
+    //array dinamico
+    string* resultado = new string[tam];
+    
     string* posI = dic.indice[letra - 'A'];//posicion de la letra
     string* posF = dic.indice[letra - 'A' + 1]; //posicion de la siguiente letra
-
-    // reservar array dinámico
-    resultado = new string[tam];
     
     // copiar palabras
     int contador = 0;
@@ -272,6 +299,7 @@ void extraePalabras(Diccionario &dic, char letra, string* &resultado, int &tam){
         contador++;
     }
 
+    return resultado;
 }
 
 /*
@@ -297,14 +325,7 @@ void copiarDiccionario(Diccionario &dic1, Diccionario &dic2){
         dic2.datos[i] = dic1.datos[i];
     }
 
-    // reconstruir índice
-    for (int i = 0; i < dic2.util; i++)
-    {
-        dic2.indice[i] = &dic2.datos[i];
-    }
+    // reconstruir índice 
+    redimensionar_indices(dic2);
     
-
-    // posición extra al final del array indice
-    dic2.datos[dic2.util] = "000";
-    dic2.indice[dic2.util] = &dic2.datos[dic2.util]; //la posicion donde esta z mas 1 mas para llegar al final del array
 }

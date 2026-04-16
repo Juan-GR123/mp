@@ -1,0 +1,17 @@
+# Compilador
+CXX = g++
+CXXFLAGS = -Iinclude
+
+all: bin/test
+
+bin/test: obj/test.o obj/diccionario.o
+	$(CXX) obj/test.o obj/diccionario.o -o bin/test
+
+obj/test.o: src/test.cpp include/diccionario.h
+	$(CXX) -c src/test.cpp -o obj/test.o $(CXXFLAGS)
+
+obj/diccionario.o: src/diccionario.cpp include/diccionario.h
+	$(CXX) -c src/diccionario.cpp -o obj/diccionario.o $(CXXFLAGS)
+
+clean:
+	rm -f obj/*.o bin/test

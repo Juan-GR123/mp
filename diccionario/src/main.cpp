@@ -9,8 +9,7 @@ En lugar de colocar todo el código en la función main, se utilizan funciones
 diferentes para probar las funcionalidades del módulo Diccionario. 
 
 */
-
-
+ 
 #include <iostream>
 #include <string>
 #include "diccionario.h"
@@ -29,12 +28,6 @@ void basico1(){
     Diccionario miDic = {nullptr, nullptr, 0,0};
     crearDiccionario(miDic);
 
-    /*
-    for (int i = 0; i < miDic.util; i++)
-    {
-        cout << miDic.datos[i] << endl;
-    }
-    */
 
     borrarDiccionario(miDic);
 
@@ -54,8 +47,6 @@ void basico2(){
     agregaPalabra(miDic, "ALGUN");
 
 
-    mostrarDiccionario(miDic);
-    
     mostrarPalabras(miDic, 'A');
     
 
@@ -176,16 +167,16 @@ void copiar(){
     }
   mostrarDiccionario(otro);
   borrarDiccionario(otro);
-
+ 
 }
 
 int main(){ 
    // llamado a las funciones de prueba
     basico1();
     basico2();
-   // basico3();
-    //redimensionar();
-    //copiar();
+    basico3();
+    redimensionar();
+    copiar();
 
 }
                  

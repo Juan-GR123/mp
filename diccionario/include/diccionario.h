@@ -14,7 +14,7 @@ struct Diccionario{
 };
 
 
-const int N_INDICE = 'Z' - 'A' + 1; // 26 letras + 1
+const int N_INDICE = 'Z' - 'A' + 2; // 26 letras + 2
 const int N_DATOS = N_INDICE * 2;
 
 void crearDiccionario(Diccionario &dic);
@@ -37,6 +37,6 @@ void borraPalabra(Diccionario &dic, string pal);
 
 void copiarDiccionario(Diccionario &dic1, Diccionario &dic2);
 
-void extraePalabras(Diccionario &dic, char letra, string* &resultado, int &tam);
+string* extraePalabras(Diccionario &dic, char letra, int &tam);
 
 #endif
