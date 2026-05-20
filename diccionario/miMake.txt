@@ -1,0 +1,27 @@
+# Compilador
+CXX = g++
+CXXFLAGS = -Iinclude
+
+# Nombre de la biblioteca
+LIB = libdiccionario.lib
+
+all: bin/miDic
+
+# Ejecutable usando la biblioteca
+bin/miDic: obj/main.o $(LIB)
+	$(CXX) obj/main.o $(LIB) -o bin/miDic
+
+# Crear biblioteca
+$(LIB): obj/diccionario.o
+	ar rcs $(LIB) obj/diccionario.o
+
+# Objetos
+obj/main.o: src/main.cpp include/diccionario.h
+	$(CXX) -c src/main.cpp -o obj/main.o $(CXXFLAGS)
+
+obj/diccionario.o: src/diccionario.cpp include/diccionario.h
+	$(CXX) -c src/diccionario.cpp -o obj/diccionario.o $(CXXFLAGS)
+
+# Limpieza
+clean:
+	rm -f obj/*.o bin/miDic $(LIB)
