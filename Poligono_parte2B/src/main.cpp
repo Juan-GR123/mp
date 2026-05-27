@@ -12,57 +12,60 @@
 
 #include <cstdlib>
 #include "Asteroide.h"
-#include "PoliReg.h"
+#include "configuracion.h"
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 const bool DEBUG = true;
-
 /*
  * 
  */
 
 
+
 int main(int argc, char** argv) {
-    int maxAst = Asteroide::MAX_AST;
-    Asteroide *campoAsteroides = new Asteroide[Asteroide::MAX_AST];// como lo inicializo con MAX_AST con meoria dinamica??
-    int uAst = 0; 
-    Asteroide *disparos = new Asteroide[Asteroide::MAX_DIS];
-    int uDisp = 0;
+    int maxAst = MAX_AST;
+    Asteroide *campoAsteroides = new Asteroide[MAX_AST];// como lo inicializo con MAX_AST con meoria dinamica??
+    int uAst = 10; 
+    Asteroide *disparos = new Asteroide[MAX_DIS];
+    int uDisp = 10;
     Asteroide nave ;
     
+    /*for(int i=0;i<uAst; i++){
+        cout << campoAsteroides[i].toString() << endl;
+    }*/
+    
     // Mover y rotar los asteroides del campoAsteroides.
-    for(int i=0;i<Asteroide::MAX_AST; i++){
+    for(int i=0;i<uAst; i++){
         campoAsteroides[i].mover();
         campoAsteroides[i].rotar();
     }
     
     /*Detectar y gestionar colisiones entre asteroides del campoAsteroides.
-    Cuando dos asteroides colisionan, simularemos la version m ´ as sen- ´
+    Cuando dos asteroides colisionan, simularemos la version mas sen-
     cilla del choque elastico que implica el intercambio de velocidades ´
     entre ambos asteroides.*/
     
-    //en donde implemento esto porque esto estaria mejor puesto en Asteroide.cpp no???
     
-    for(int i=0; i < Asteroide::MAX_AST; i++){
-        for(int j=i+1; j < Asteroide::MAX_AST; j++){
+    for(int i=0; i <uAst; i++){
+        for(int j=i+1; j < uAst; j++){
             if(campoAsteroides[i].colision(campoAsteroides[j])){
-               
-                Punto2D v1 = campoAsteroides[i].getVelocidad();
-                Punto2D v2 = campoAsteroides[j].getVelocidad();
-
-                if(DEBUG){
-                cout << i << j <<"Antes de intercambiar" <<  campoAsteroides[i].getVelocidad() <<  ", " << campoAsteroides[j].getVelocidad() << endl;    
-                }
-                
-                campoAsteroides[i].setVelocidad(v2);
-                campoAsteroides[j].setVelocidad(v1);
                 
                 if(DEBUG){
-                cout << i << j << "Despues de intercambiar" <<  campoAsteroides[i].getVelocidad() <<  ", " <<  campoAsteroides[j].getVelocidad() << endl;    
+                    cout << i << j <<"Antes de intercambiar" << campoAsteroides[i].getVelocidad()  <<  ", " << campoAsteroides[j].getVelocidad() << endl;    
                 }
-            } 
+                
+        
+                campoAsteroides[i].choque_Asteroides(campoAsteroides[j]); 
+        
+                
+                if(DEBUG){
+                    cout << i << j << "Despues de intercambiar" << campoAsteroides[i].getVelocidad()  <<  ", " <<  campoAsteroides[j].getVelocidad() << endl;    
+                }
+                
+            }
+            
         }
     }
     
@@ -71,7 +74,9 @@ int main(int argc, char** argv) {
     pantalla. Cuando un asteroide llegue al borde de la pantalla tiene
     dos opciones: 1) rebotar o 2) aparecer por el lado contrario.*/
     
-    
+    for(int i=0; i<uAst; i++){
+        campoAsteroides[i].choque_borde();
+    }
     
     /*
      Mover los misiles en disparos. Si un misil sale de la pantalla,
@@ -100,6 +105,10 @@ objeto asteroide con la misma posicion que la nave y la velocidad ´
 indicada anteriormente. Luego, este nuevo objeto se anade al array ˜
 disparos
      */
+    
+    
+    
+    
     delete[] campoAsteroides;
     delete[] disparos;
     return 0;

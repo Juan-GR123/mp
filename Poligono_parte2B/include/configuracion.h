@@ -13,7 +13,17 @@
 #ifndef CONFIGURACION_H
 #define CONFIGURACION_H
 
-
-
+ const int MAX_AST = 20;
+ const int MAX_DIS = 20;
+ const int max_X = 200;
+ const int  max_Y = 200;
+ const int min_Y = 5;
+ const int min_X = 5;
+ const int max_vel = 20;
+ const int min_vel = 5;
+ const int max_ver = 7;
+ const int min_ver = 3;
+ const int max_radio = 20;
+ const int min_radio= 15;
 #endif /* CONFIGURACION_H */
 

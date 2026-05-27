@@ -161,7 +161,7 @@ void ordenar() {
         }
     }
     
-    
+     
     //   5. Muestre el perimetro de cada pol´ıgono del array.
     cout << "Despues de ordenar: " <<endl;
     

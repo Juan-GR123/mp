@@ -77,7 +77,7 @@ void PoliReg::copiar(const PoliReg &otro){
     this->centro = otro.centro;
     this->radio = otro.radio;
     
-    reservaMemoria(otro.N);
+    
     
     for(int i = 0; i < N; i++){
         vertices[i] = otro.vertices[i];
@@ -91,6 +91,7 @@ void PoliReg::copiar(const PoliReg &otro){
  PoliReg(const PoliReg & otro): constructor de copia.
  */
 PoliReg::PoliReg(const PoliReg & otro){
+    reservaMemoria(otro.N);
     this->copiar(otro);
 }
 /*
@@ -305,9 +306,13 @@ string PoliReg::toString() const{
 }
 
 PoliReg& PoliReg::operator =(const PoliReg &rhs){ 
-    liberaMemoria();
-    reservaMemoria(rhs.N);
-    this->copiar(rhs);
+    
+    if(this != &rhs){
+        liberaMemoria();
+        reservaMemoria(rhs.N);
+        this->copiar(rhs);
+    }
+    
     
     return (*this);
             
@@ -315,7 +320,12 @@ PoliReg& PoliReg::operator =(const PoliReg &rhs){
 
 
 ostream& operator<<(ostream &flujo, const PoliReg &otro){
-    flujo << otro.toString() << endl;
+    flujo << "@centro " << otro.centro << "\n@radio " << otro.radio << "\nvertices ";
+        
+    for(int i = 0; i < otro.N; i++){
+       flujo << otro.vertices[i] << " ";
+    }
+    flujo << endl;
     return flujo;
 }
 

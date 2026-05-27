@@ -24,15 +24,11 @@ using namespace std;
 
 class Asteroide {
 private:
-    static const int max_X;
-    static const int max_Y;
     PoliReg roca ;
     Punto2D veloc ;
     float giro;
     
 public:
-    static const int MAX_AST;
-    static const int MAX_DIS;
     Asteroide();
     Asteroide(const PoliReg & pol, const Punto2D & vel,float rads=10);
     void mover();
@@ -40,6 +36,9 @@ public:
     bool colision(const Asteroide & otro);
     Punto2D getVelocidad() const;
     void setVelocidad(const Punto2D & nuevaVel);
+    void choque_Asteroides(Asteroide & otro);
+    void choque_borde();
+    string toString() const;
     
 };
 

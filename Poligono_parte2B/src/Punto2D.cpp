@@ -113,14 +113,14 @@ istream& operator>>(istream &flujo, Punto2D &p){
 
 ostream& operator<<(ostream &flujo, const Punto2D &p){
 
-    flujo << p.toString() <<endl;
+    flujo <<  "(x: " << p.x << ", y: " << p.y << ")" << endl;
 
     return flujo;
 }
 
 bool Punto2D::operator ==(const Punto2D &rhs){
     bool respuesta = false;
-    if((abs(this->x - rhs.x) < pow(10,-4)) && (abs(this->y - rhs.y) < pow(10,-4))){
+    if((fabs(this->x - rhs.x) < pow(10,-4)) && (fabs(this->y - rhs.y) < pow(10,-4))){
         respuesta= true;
     }   
     

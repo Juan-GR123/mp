@@ -12,28 +12,27 @@
 
 #include <cstdlib>
 #include "Asteroide.h"
+#include "raylib.h"
+#include "configuracion.h"
 #include <iostream>
 #include <string>
 #include <cmath>
 
-const bool DEBUG = false;
+const bool DEBUG = true;
 
 using namespace std;
 
 /*
  * 
  */
-const int Asteroide::MAX_AST = 10;
-const int Asteroide::MAX_DIS = 10;
-const int Asteroide::max_X = 200;
-const int Asteroide::max_Y = 200;
+
 
     Asteroide::Asteroide(){
-        int n_vertices = rand() % (200 - 3 + 1) + 3; // el max_vert y el min_vert de PoliReg.h como lo llamo en Asteroide?
-        float r= rand() % (200 - 15 + 1) + 15;
+        int n_vertices = rand() % (max_ver - min_ver + 1) + min_ver; 
+        float r= rand() % (max_radio - min_radio + 1) + min_radio;
         Punto2D centro1(rand()% max_X, rand() % max_Y);
-        float vx = (rand() % (2 * max_X + 1)) - max_X; // lo tengo que poner a radianes o como?
-        float vy = (rand() % (2 * max_Y + 1)) - max_Y;
+        float vx = rand() % (max_vel - min_vel + 1) + min_vel;
+        float vy = rand() % (max_vel - min_vel + 1) + min_vel;
         
         veloc = Punto2D(vx, vy);
         roca = PoliReg(n_vertices, centro1, r);
@@ -63,5 +62,35 @@ const int Asteroide::max_Y = 200;
     void Asteroide::setVelocidad(const Punto2D & nuevaVel){
         veloc = nuevaVel;
     }
+    
+    void Asteroide::choque_Asteroides(Asteroide & otro){
+        Punto2D v1 = this->veloc;
+        Punto2D v2 = otro.veloc;
+        
+        this->veloc= v2;
+        otro.veloc = v1;
+        
+    }
+    
+    
+    void Asteroide::choque_borde(){
+        if ((this->roca.getCentro().getX() >= (max_X - roca.getRadio())) || (this->roca.getCentro().getX() <= this->roca.getRadio()))
+		this->veloc.setX(this->veloc.getX() * -1.1 );
+	if ((this->roca.getCentro().getY() >= (max_Y - roca.getRadio())) || (this->roca.getCentro().getY() <= this->roca.getRadio()))
+		this->veloc.setY(this->veloc.getY() * -1.1);
+    }
+    
+    
+    string Asteroide::toString() const{
+        string s="";
+        
+        s = "@roca " + roca.toString() +
+            "\n@veloc " + veloc.toString() +
+            "\ngiro " + to_string(giro);
+
+    return s;   
+    }
+    
+    
 
     
