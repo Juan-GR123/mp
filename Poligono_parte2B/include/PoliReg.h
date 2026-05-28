@@ -66,7 +66,7 @@ double perimetro() const;
 
 void rotar(float rads);
 
-bool colision(const PoliReg & otro);
+bool colision(const PoliReg & otro) const;
 
 void mover(float dx, float dy);
 
@@ -76,9 +76,9 @@ friend ostream& operator<<(ostream &flujo, const PoliReg &otro);
 
 friend istream& operator>>(istream &flujo, PoliReg &otro);
 
-bool operator ==(const PoliReg &rhs);
+bool operator ==(const PoliReg &rhs) const;
 
-bool operator <(const PoliReg &rhs);
+bool operator <(const PoliReg &rhs) const;
 
 ~PoliReg();
 

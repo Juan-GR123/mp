@@ -251,7 +251,7 @@ tener en cuenta que la sentencia p.Colision(p), debe dar false
 
 //se trata de calcular la circunferencia del poligono 
 //con el centro y el radio y utilizar el metodo colision de punto2d para saber si colisionan
-bool PoliReg::colision(const PoliReg & otro){
+bool PoliReg::colision(const PoliReg & otro) const{
     
     bool respuesta= false;
     float suma_radios=this->radio + otro.radio;
@@ -353,7 +353,7 @@ istream& operator>>(istream &flujo, PoliReg &otro){
     return flujo;
 }
 
-bool PoliReg::operator ==(const PoliReg &rhs){
+bool PoliReg::operator ==(const PoliReg &rhs) const{
     bool respuesta=true;
     
     if(this->radio != rhs.getRadio() || this->N != rhs.getLados()){
@@ -370,7 +370,7 @@ bool PoliReg::operator ==(const PoliReg &rhs){
     return respuesta;
 }
 
-bool PoliReg::operator <(const PoliReg &rhs){
+bool PoliReg::operator <(const PoliReg &rhs) const{
     bool respuesta= false;
     
     if(this->perimetro() < rhs.perimetro()){

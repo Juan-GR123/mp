@@ -45,18 +45,23 @@ using namespace std;
         veloc = vel;
         giro = rads;
     }
+    
     void Asteroide::mover(){
         roca.mover(veloc.getX(),veloc.getY());//cojemos los puntos de veloc para que se mueva a la velocidad asignada
     }
     void Asteroide::rotar(){
         roca.rotar(giro);
     }
-    bool Asteroide::colision(const Asteroide & otro){
+    bool Asteroide::colision(const Asteroide & otro) const{
         return roca.colision(otro.roca);
     }
     
     Punto2D Asteroide::getVelocidad() const {
         return veloc;
+    }
+    
+    PoliReg Asteroide::getRoca() const{
+        return roca;
     }
     
     void Asteroide::setVelocidad(const Punto2D & nuevaVel){
@@ -72,6 +77,7 @@ using namespace std;
         
     }
     
+  
     
     void Asteroide::choque_borde(){
         if ((this->roca.getCentro().getX() >= (max_X - roca.getRadio())) || (this->roca.getCentro().getX() <= this->roca.getRadio()))
@@ -80,16 +86,26 @@ using namespace std;
 		this->veloc.setY(this->veloc.getY() * -1.1);
     }
     
-    
-    string Asteroide::toString() const{
-        string s="";
-        
-        s = "@roca " + roca.toString() +
-            "\n@veloc " + veloc.toString() +
-            "\ngiro " + to_string(giro);
+    bool Asteroide::fueraPantalla() const{
 
-    return s;   
+        bool respuesta = false;
+        float x = roca.getCentro().getX();
+        float y = roca.getCentro().getY();
+        float r = roca.getRadio();
+
+        if (( x >= (max_X - r)) || (x <= r) || (y >= max_Y - r) || (y <= r )){
+            respuesta = true;
+        }
+        
+        return respuesta;
     }
+    
+     ostream& operator<<(ostream &flujo, const Asteroide &otro){
+         flujo << "@roca " << otro.roca << "\n@veloc " << otro.veloc << "\ngiro " << otro.giro << endl;
+         
+         return flujo;
+     }
+    
     
     
 

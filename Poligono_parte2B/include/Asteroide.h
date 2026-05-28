@@ -27,18 +27,19 @@ private:
     PoliReg roca ;
     Punto2D veloc ;
     float giro;
-    
 public:
     Asteroide();
     Asteroide(const PoliReg & pol, const Punto2D & vel,float rads=10);
     void mover();
     void rotar();
-    bool colision(const Asteroide & otro);
+    bool colision(const Asteroide & otro) const;
     Punto2D getVelocidad() const;
+    PoliReg getRoca() const;
     void setVelocidad(const Punto2D & nuevaVel);
     void choque_Asteroides(Asteroide & otro);
     void choque_borde();
-    string toString() const;
+    bool fueraPantalla() const;
+    friend ostream& operator<<(ostream &flujo, const Asteroide &otro);
     
 };
 
