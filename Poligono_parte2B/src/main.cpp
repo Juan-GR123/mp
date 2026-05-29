@@ -57,9 +57,9 @@ int main(int argc, char** argv) {
      debe desaparecer.
      */
     
-    if(IsKeyPressed(KEY_A)){
-        juego.disparar();
-    }
+    // if(IsKeyPressed(KEY_A)){
+    //     juego.disparar();
+    // }
     
     for(int i=0; i<juego.getuDisp(); i++){
         cout << juego.getDisparos(i) << endl;
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
     desde la ultima posici ´ on´ util del array (en otro caso, puede tener pro- ´
     blemas con el borrado).
      */
-    
+    juego.colision_misiles_Asteroides();
     
     /*
      Detectar y gestionar colision entre la ´ nave y algun asteroide.
@@ -99,6 +99,15 @@ int main(int argc, char** argv) {
      */
     
     
+
+
+
+    // while (!WindowShouldClose()) {
+    //     juego.update();
+    //     BeginDrawing();
+    //     //juego.pintar();
+    //     EndDrawing();
+    // }   
     
     
    

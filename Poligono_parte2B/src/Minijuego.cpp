@@ -139,6 +139,67 @@ void Minijuego::detectarMisiles_bordes(){
     }
 }
 
+void Minijuego::colision_misiles_Asteroides(){
+    for (int i = 0; i < uDisp; i++) {
+
+        bool impacto = false;
+
+        // recorrer asteroides desde el final
+        for (int j = uAst - 1; j >= 0 && !impacto; j--) {
+
+            if (disparos[i].colision(campoAsteroides[j])) {
+
+                impacto = true;
+
+                //pasamos a la izquierda los asteroides para poder eliminar la ultima posicion del uAst
+                for (int k = j; k < uAst - 1; k++) {
+                    campoAsteroides[k] = campoAsteroides[k + 1];
+                }
+                uAst--;
+
+                i--; // reanalizar posición actual del disparo
+            }
+        }
+    }
+}
+
+
+void Minijuego::update() {
+
+    if (IsKeyDown(KEY_LEFT)) {
+        nave.getRoca().mover(-5, 0);
+    }
+
+    if (IsKeyDown(KEY_RIGHT)) {
+        nave.getRoca().mover(5, 0);
+    }
+
+    if (IsKeyPressed(KEY_A)) {
+        disparar();
+    }
+
+    for (int i = 0; i < uAst; i++) {
+        campoAsteroides[i].mover();
+        campoAsteroides[i].rotar();
+        campoAsteroides[i].choque_borde();
+    }
+
+    for (int i = 0; i < uDisp; i++) {
+        disparos[i].mover();
+    }
+
+    detectarMisiles_bordes();
+
+    // ------------------------
+    // 4. COLISIONES
+    // ------------------------
+    detectarColisiones_Asteroides();
+    detectarColisiones_bordes();
+    colision_misiles_Asteroides();
+
+    // detectarColisionNave();
+}
+
 Minijuego::~Minijuego(){
     liberarMemoria();
 }

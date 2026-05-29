@@ -37,6 +37,7 @@ class Minijuego{
         void detectarColisiones_bordes();
         void pintar();
         void detectarMisiles_bordes();
+        void colision_misiles_Asteroides();
         Asteroide getCampo(int i) const;
         int getuAst() const;
         int getuDisp() const;
