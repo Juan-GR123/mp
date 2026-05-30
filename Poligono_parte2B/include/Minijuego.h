@@ -27,22 +27,27 @@ class Minijuego{
         int uDisp = 0;
         Asteroide nave ;
         void liberarMemoria();
+        void generarJuego();
     public:
         Minijuego();
         Minijuego(const Asteroide *campo, int nCampo,const Asteroide *disp, int nDisp,const Asteroide &nav);
         void disparar();
         void moverYrotar();
-        void update();
+        void update(); // actualizar para comprobar la posicion de los asteroides y los disparos
         void detectarColisiones_Asteroides();
         void detectarColisiones_bordes();
-        void pintar();
+        void pintar() const; //pintar los vectores
         void detectarMisiles_bordes();
         void colision_misiles_Asteroides();
+        void detectarColisionNave();
+        void mover_nave(float x, float y);
         Asteroide getCampo(int i) const;
         int getuAst() const;
         int getuDisp() const;
         Asteroide getNave() const;
         Asteroide getDisparos(int i) const;
+        void ganar();
+        void reiniciarJuego();
         ~Minijuego();
 };
 

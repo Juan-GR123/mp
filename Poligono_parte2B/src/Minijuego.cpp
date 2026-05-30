@@ -19,8 +19,9 @@
 #include <cmath>
 
 using namespace std;
-const bool DEBUG = true;
-
+const bool DEBUG = false;
+bool gameOver= false;
+bool campeon = false;
 
 void Minijuego::liberarMemoria(){
     if (campoAsteroides != nullptr){
@@ -34,16 +35,24 @@ void Minijuego::liberarMemoria(){
     }
 }
 
-Minijuego::Minijuego(){
+void Minijuego::generarJuego(){
     campoAsteroides = new Asteroide[MAX_AST];//se crearan por defecto
     uAst = 10; 
     
     disparos = new Asteroide[MAX_DIS];
     uDisp = 0;
    
-    PoliReg base;
+    Punto2D centroNave(max_X/2, max_Y/1.25);
+
+    PoliReg base(3, centroNave, 15);
+    
     Punto2D velNave(0,0);
+    
     this->nave = Asteroide(base,velNave, 0); // la nave no tendra velocidad ni giro hasta que se mueva con las teclas de direccion
+}
+
+Minijuego::Minijuego(){
+    generarJuego();
 }
 
 Minijuego::Minijuego(const Asteroide *campo, int nCampo,const Asteroide *disp, int nDisp,const Asteroide &nav){
@@ -121,10 +130,6 @@ void Minijuego::detectarColisiones_bordes(){
 }
 
 void Minijuego::detectarMisiles_bordes(){
-    for(int i=0; i<uDisp; i++){
-        disparos[i].mover();
-    }
-    
     for(int i=0; i<uDisp; i++){  
 
         if(disparos[i].fueraPantalla()){
@@ -139,13 +144,30 @@ void Minijuego::detectarMisiles_bordes(){
     }
 }
 
+void Minijuego::pintar() const {
+
+    for(int i=0; i<uAst; i++){
+        campoAsteroides[i].pintar_asteroide();
+    }
+
+    for(int i=0; i<uDisp; i++){
+        disparos[i].pintar_asteroide();
+    }
+
+    nave.pintar_asteroide();
+}
+
+void Minijuego::mover_nave(float x, float y){
+    this->nave.mover_roca(x,y);
+}
+
 void Minijuego::colision_misiles_Asteroides(){
     for (int i = 0; i < uDisp; i++) {
 
         bool impacto = false;
 
         // recorrer asteroides desde el final
-        for (int j = uAst - 1; j >= 0 && !impacto; j--) {
+        for (int j = uAst - 1; j >= 0 && !impacto; j--) {//si tenemos 10 uAst empezara por j=9 que sera la ultima posicion
 
             if (disparos[i].colision(campoAsteroides[j])) {
 
@@ -163,20 +185,16 @@ void Minijuego::colision_misiles_Asteroides(){
     }
 }
 
+void Minijuego::detectarColisionNave(){
+    for(int i=0; i <uAst; i++){
+        if(campoAsteroides[i].colision(this->nave)){
+            gameOver=true;
+        }
+    }
+}
+
 
 void Minijuego::update() {
-
-    if (IsKeyDown(KEY_LEFT)) {
-        nave.getRoca().mover(-5, 0);
-    }
-
-    if (IsKeyDown(KEY_RIGHT)) {
-        nave.getRoca().mover(5, 0);
-    }
-
-    if (IsKeyPressed(KEY_A)) {
-        disparar();
-    }
 
     for (int i = 0; i < uAst; i++) {
         campoAsteroides[i].mover();
@@ -189,18 +207,29 @@ void Minijuego::update() {
     }
 
     detectarMisiles_bordes();
-
-    // ------------------------
-    // 4. COLISIONES
-    // ------------------------
     detectarColisiones_Asteroides();
-    detectarColisiones_bordes();
     colision_misiles_Asteroides();
+    ganar();
+    detectarColisionNave();
+    
+}
 
-    // detectarColisionNave();
+void Minijuego::ganar(){
+    if(uAst <=0){
+        campeon=true;
+    }
+}
+
+void Minijuego::reiniciarJuego(){
+
+    gameOver = false;
+    campeon=false;
+    
+    liberarMemoria();
+    generarJuego();
 }
 
 Minijuego::~Minijuego(){
-    liberarMemoria();
+    liberarMemoria();    
 }
 

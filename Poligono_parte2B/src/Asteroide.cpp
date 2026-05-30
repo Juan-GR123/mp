@@ -18,8 +18,6 @@
 #include <string>
 #include <cmath>
 
-const bool DEBUG = true;
-
 using namespace std;
 
 /*
@@ -80,7 +78,7 @@ using namespace std;
   
     
     void Asteroide::choque_borde(){
-        if ((this->roca.getCentro().getX() >= (max_X - roca.getRadio())) || (this->roca.getCentro().getX() <= this->roca.getRadio()))
+        if ((this->roca.getCentro().getX() >= (max_X - roca.getRadio())) || (this->roca.getCentro().getX() <= this->roca.getRadio())) // x-radio <=0; x<=radio ; si el centro es menor que el radio esta tocando el borde
 		this->veloc.setX(this->veloc.getX() * -1.1 );
 	if ((this->roca.getCentro().getY() >= (max_Y - roca.getRadio())) || (this->roca.getCentro().getY() <= this->roca.getRadio()))
 		this->veloc.setY(this->veloc.getY() * -1.1);
@@ -98,6 +96,29 @@ using namespace std;
         }
         
         return respuesta;
+    }
+    
+    void Asteroide::pintar_asteroide() const{
+         int n = roca.getLados();
+
+        for(int i = 0; i < n; i++){
+
+            Punto2D p1 = roca.getVertice(i);
+            Punto2D p2 = roca.getVertice((i + 1) % n);
+
+            DrawLine(
+                (int)p1.getX(),
+                (int)p1.getY(),
+                (int)p2.getX(),
+                (int)p2.getY(),
+                BLACK
+            );
+        }
+        
+    }
+    
+    void Asteroide::mover_roca(float x, float y){
+        roca.mover(x,y);
     }
     
      ostream& operator<<(ostream &flujo, const Asteroide &otro){

@@ -117,18 +117,21 @@ void PoliReg::liberaMemoria(){
 generaVertices(): utilizando el centro, el radio y N, genera
 los vertices del poligono
 */
-void PoliReg::generaVertices(){     
+void PoliReg::generaVertices(){   
+    
     float angulo=0;
+    angulo = (2 * PI) / N;// en radianes
+    
     Punto2D p0= centro;
     p0.setX(p0.getX() + radio);
     
-    angulo = (2 * PI) / N;// en radianes
     
-    vertices[0]= p0;
     
-    for(int i=1; i<N; i++){
-        Punto2D p_aux=vertices[i-1];
+    for(int i=0; i<N; i++){
+        Punto2D p_aux=p0;
+        
         p_aux.rotar(centro, i*angulo);
+        
         vertices[i]=p_aux;
     }
 }

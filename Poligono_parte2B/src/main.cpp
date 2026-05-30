@@ -30,7 +30,6 @@ int main(int argc, char** argv) {
     
     
     // Mover y rotar los asteroides del campoAsteroides.
-    juego.moverYrotar();
     
     /*Detectar y gestionar colisiones entre asteroides del campoAsteroides.
     Cuando dos asteroides colisionan, simularemos la version mas sen-
@@ -38,43 +37,14 @@ int main(int argc, char** argv) {
     entre ambos asteroides.*/
     
     
-    juego.detectarColisiones_Asteroides();
-    
-    
     /*Detectar y gestionar colisiones entre asteroides y los bordes de la
     pantalla. Cuando un asteroide llegue al borde de la pantalla tiene
     dos opciones: 1) rebotar o 2) aparecer por el lado contrario.*/
-    
-    juego.detectarColisiones_bordes();
-    
-    
-    /*Hacer una funcion para pintar los vertices de los asteroides*/
-    
-    
     
     /*
      Mover los misiles en disparos. Si un misil sale de la pantalla,
      debe desaparecer.
      */
-    
-    // if(IsKeyPressed(KEY_A)){
-    //     juego.disparar();
-    // }
-    
-    for(int i=0; i<juego.getuDisp(); i++){
-        cout << juego.getDisparos(i) << endl;
-    }
-    
-    for(int i=0; i<juego.getuDisp(); i++){
-        cout << "Antes de moverlos " << juego.getDisparos(i) << endl;
-    }
-    
-    juego.detectarMisiles_bordes();
-    
-    for(int i=0; i<juego.getuDisp(); i++){
-        cout << "Despues de mover los disparos " << juego.getDisparos(i) << endl;
-    }
-    
     
     /*
      Detectar y gestionar colisiones entre misiles (del array disparos) y
@@ -83,12 +53,10 @@ int main(int argc, char** argv) {
     desde la ultima posici ´ on´ util del array (en otro caso, puede tener pro- ´
     blemas con el borrado).
      */
-    juego.colision_misiles_Asteroides();
     
     /*
      Detectar y gestionar colision entre la ´ nave y algun asteroide.
      */
-    
     
     /*
      Detectar y gestionar las teclas pulsadas: >, mover nave a la derecha,
@@ -99,18 +67,73 @@ int main(int argc, char** argv) {
      */
     
     
-
-
-
-    // while (!WindowShouldClose()) {
-    //     juego.update();
-    //     BeginDrawing();
-    //     //juego.pintar();
-    //     EndDrawing();
-    // }   
+    //HACER:
+    /*
+     -Considere la posibilidad de cambiar la posicion de la nave a la izquierda, derecha, arriba o abajo
+     
+     -Considere que cuando un misil impacta un asteroide, este se divide en dos asteroides, cada uno con un lado menos que el original.
+     
+     -Implemente la posibilidad de disponer de varias “vidas”.
     
+     */
+    InitWindow(max_X, max_Y, "Asteroides");
+    SetTargetFPS(20);
     
-   
+    while (!WindowShouldClose()) {
+
+        
+        
+        if(!gameOver && !campeon){
+            if (IsKeyDown(KEY_LEFT)) {
+               juego.mover_nave(-5,0);
+             }
+
+            if (IsKeyDown(KEY_RIGHT)) {
+                juego.mover_nave(5,0);
+            }
+            
+            if(IsKeyDown(KEY_UP)){
+                juego.mover_nave(0,-5);
+            }
+            
+            if(IsKeyDown(KEY_DOWN)){
+                juego.mover_nave(0,5);
+            }
+
+            if (IsKeyPressed(KEY_A)) {
+                juego.disparar();
+            }
+            
+            juego.update();
+        }
+            
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+            
+        juego.pintar();
+       
+        if(gameOver){
+            DrawText("GAME OVER", max_X/2 - 120, max_Y/2, 40, RED);
+            DrawText("Pulsa la barra espaciadora para reiniciar", max_X/2 - 200, max_Y/2 + 50, 20, DARKGRAY);
+        }
+        
+        if(campeon){
+            DrawText("YOU WIN", max_X/2 - 100, max_Y/2, 40, GREEN);
+            DrawText("¡Felicidades has ganado!", max_X/2 - 140, max_Y/2 + 50, 20, DARKGRAY);
+        }
+            
+       EndDrawing();
+        
+        if((gameOver && IsKeyPressed(KEY_SPACE)) || (campeon && IsKeyPressed(KEY_SPACE))){
+           juego.reiniciarJuego();
+        }
+        
+       
+    }
+
+    CloseWindow();
+    
     return 0;
     
    

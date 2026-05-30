@@ -36,9 +36,13 @@ public:
     Punto2D getVelocidad() const;
     PoliReg getRoca() const;
     void setVelocidad(const Punto2D & nuevaVel);
+    void pintar_asteroide() const;
     void choque_Asteroides(Asteroide & otro);
     void choque_borde();
     bool fueraPantalla() const;
+    void mover_roca(float x, float y);
+    
+    
     friend ostream& operator<<(ostream &flujo, const Asteroide &otro);
     
 };
