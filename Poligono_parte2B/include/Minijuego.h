@@ -26,6 +26,7 @@ class Minijuego{
         Asteroide *disparos ;
         int uDisp = 0;
         Asteroide nave ;
+        double ultimoImpacto = 0;
         void liberarMemoria();
         void generarJuego();
     public:

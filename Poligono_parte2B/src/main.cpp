@@ -20,6 +20,7 @@
 
 using namespace std;
 const bool DEBUG = true;
+
 /*
  * 
  */
@@ -69,15 +70,17 @@ int main(int argc, char** argv) {
     
     //HACER:
     /*
-     -Considere la posibilidad de cambiar la posicion de la nave a la izquierda, derecha, arriba o abajo
+     -Considere la posibilidad de cambiar la posicion de la nave a la izquierda, derecha, arriba o abajo //hecho
      
-     -Considere que cuando un misil impacta un asteroide, este se divide en dos asteroides, cada uno con un lado menos que el original.
+     -Implemente la posibilidad de disponer de varias “vidas”.//hecho
      
-     -Implemente la posibilidad de disponer de varias “vidas”.
+     - Tambien he añadido que la nave no pueda salir de la pantalla
     
      */
     InitWindow(max_X, max_Y, "Asteroides");
     SetTargetFPS(20);
+    Texture2D corazon = LoadTexture("mp/Poligono_parte2B/heart-full.png");// Configura tu ruta correspondiente hasta donde tengas el proyecto con la imagen
+    Texture2D corazon_vacio = LoadTexture("mp/Poligono_parte2B/heart.png");
     
     while (!WindowShouldClose()) {
 
@@ -112,15 +115,25 @@ int main(int argc, char** argv) {
         ClearBackground(RAYWHITE);
             
         juego.pintar();
+        
+        
+        for(int i = 0; i < MAX_VIDAS; i++){
+            
+            if(i < vidas){
+                DrawTexture(corazon, 10 + i * 40, 10, WHITE);
+            }else{
+                DrawTexture(corazon_vacio, 10 + i * 40, 10, WHITE);
+            }
+        }
        
         if(gameOver){
-            DrawText("GAME OVER", max_X/2 - 120, max_Y/2, 40, RED);
-            DrawText("Pulsa la barra espaciadora para reiniciar", max_X/2 - 200, max_Y/2 + 50, 20, DARKGRAY);
+            DrawText("GAME OVER", max_X/2 - 120, max_Y/2 - 50 , 40, RED);
+            DrawText("Pulsa la barra espaciadora para reiniciar", max_X/2 - 200, max_Y/2, 20, DARKGRAY);
         }
         
         if(campeon){
-            DrawText("YOU WIN", max_X/2 - 100, max_Y/2, 40, GREEN);
-            DrawText("¡Felicidades has ganado!", max_X/2 - 140, max_Y/2 + 50, 20, DARKGRAY);
+            DrawText("YOU WIN", max_X/2 - 100, max_Y/2 - 50, 40, GREEN);
+            DrawText("¡Felicidades has ganado!", max_X/2 - 140, max_Y/2, 20, DARKGRAY);
         }
             
        EndDrawing();
@@ -132,6 +145,10 @@ int main(int argc, char** argv) {
        
     }
 
+    //se ve que hace falta quitar las texturas al final del programa para que no haya fugas de datos
+    UnloadTexture(corazon);
+    UnloadTexture(corazon_vacio);
+    
     CloseWindow();
     
     return 0;

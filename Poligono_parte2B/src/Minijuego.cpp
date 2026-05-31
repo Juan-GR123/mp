@@ -22,6 +22,8 @@ using namespace std;
 const bool DEBUG = false;
 bool gameOver= false;
 bool campeon = false;
+int vidas=3;
+
 
 void Minijuego::liberarMemoria(){
     if (campoAsteroides != nullptr){
@@ -53,6 +55,7 @@ void Minijuego::generarJuego(){
 
 Minijuego::Minijuego(){
     generarJuego();
+    ultimoImpacto = 0;
 }
 
 Minijuego::Minijuego(const Asteroide *campo, int nCampo,const Asteroide *disp, int nDisp,const Asteroide &nav){
@@ -61,6 +64,7 @@ Minijuego::Minijuego(const Asteroide *campo, int nCampo,const Asteroide *disp, i
     disparos = new Asteroide[MAX_DIS];
     uDisp=nDisp;
     nave= nav;
+    ultimoImpacto=0;
 }
 
 void Minijuego::disparar(){
@@ -158,7 +162,19 @@ void Minijuego::pintar() const {
 }
 
 void Minijuego::mover_nave(float x, float y){
-    this->nave.mover_roca(x,y);
+    Punto2D Ncentro = nave.getRoca().getCentro();
+    float r = nave.getRoca().getRadio();
+
+    float nuevoX = Ncentro.getX() + x; // si el centro mas las coordenadas que se le suman se salen entonces no se hace mover_roca
+    float nuevoY = Ncentro.getY() + y;
+
+    if (nuevoX >= r && nuevoX <= max_X - r &&
+        nuevoY >= r && nuevoY <= max_Y - r) {
+        //Es lo contrario de fueraPantalla() porque aqui estamos intentado
+        //comprobar que no se ha salido para que lo podamos mover
+
+        nave.mover_roca(x, y);
+    }
 }
 
 void Minijuego::colision_misiles_Asteroides(){
@@ -178,18 +194,32 @@ void Minijuego::colision_misiles_Asteroides(){
                     campoAsteroides[k] = campoAsteroides[k + 1];
                 }
                 uAst--;
-
-                i--; // reanalizar posición actual del disparo
+                
+                //tambien debemos eliminar el disparo que colisiona con el asteroide
+                for(int d = i; d < uDisp - 1; d++){
+                    disparos[d] = disparos[d + 1];
+                }
+                uDisp--;
+                i--; // necesito volver a pasar la i de uDisp porque al eliminar el misil de disparo[i] que es el actual por el de disparo[i+1] me lo salto en la siguiente iteracion
             }
         }
     }
 }
 
 void Minijuego::detectarColisionNave(){
+    double tiempoActual = GetTime();
     for(int i=0; i <uAst; i++){
         if(campoAsteroides[i].colision(this->nave)){
-            gameOver=true;
+            if(tiempoActual - ultimoImpacto > 1.0){ //por lo menos que haya un segundo de invulneravilidad despues de chocarse con un asteroide
+                vidas--;
+                ultimoImpacto = tiempoActual; // se pone el ultimoImpacto con el tiempoactual de impacto para tenerlo en cuenta con el siguiente
+
+                if(vidas<=0){
+                    gameOver=true;
+                } 
+            }
         }
+          
     }
 }
 
@@ -224,6 +254,8 @@ void Minijuego::reiniciarJuego(){
 
     gameOver = false;
     campeon=false;
+    vidas=3;
+    ultimoImpacto=0;
     
     liberarMemoria();
     generarJuego();

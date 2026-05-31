@@ -84,6 +84,7 @@ using namespace std;
 		this->veloc.setY(this->veloc.getY() * -1.1);
     }
     
+    
     bool Asteroide::fueraPantalla() const{
 
         bool respuesta = false;

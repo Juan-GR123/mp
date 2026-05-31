@@ -27,5 +27,7 @@
  const int min_radio= 15;
  extern bool gameOver;
  extern bool campeon;
+ extern int vidas;
+ const int MAX_VIDAS=3;
 #endif /* CONFIGURACION_H */
 
